@@ -1,47 +1,87 @@
-// angular import
-import { Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Component } from '@angular/core';  
+import { FormControl, Validators } from '@angular/forms';  
+import { RouterModule } from '@angular/router';  
+import { CommonModule } from '@angular/common'; // Importing CommonModule  
+import { MatInputModule } from '@angular/material/input'; // Ensure MatInputModule is imported  
+import { MatCheckboxModule } from '@angular/material/checkbox'; // Importing MatCheckboxModule  
+import { MatFormFieldModule } from '@angular/material/form-field'; // Importing MatFormFieldModule  
+import { MatButtonModule } from '@angular/material/button'; // Importing MatButtonModule  
+import { SharedModule } from 'src/app/demo/shared/shared.module';  
 
-// project import
-import { SharedModule } from 'src/app/demo/shared/shared.module';
+@Component({  
+  selector: 'app-register',  
+  standalone: true,  
+  imports: [  
+    CommonModule, // Add CommonModule here  
+    RouterModule,  
+    MatInputModule, // Ensure this is present  
+    MatCheckboxModule, // Import checkbox  
+    MatFormFieldModule, // Import form field (for mat-error)  
+    MatButtonModule, // Import button module  
+    SharedModule  
+  ],  
+  templateUrl: './register.component.html',  
+  styleUrls: ['./register.component.scss', '../authentication.scss']  
+})  
+export default class RegisterComponent {  
+  // Public properties  
+  hide = true;  
+  coHide = true;  
 
-@Component({
-  selector: 'app-register',
-  imports: [SharedModule, RouterModule],
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss', '../authentication.scss']
-})
-export default class RegisterComponent {
-  // public props
-  hide = true;
-  coHide = true;
-  email = new FormControl('', [Validators.required, Validators.email]);
+  firstName = new FormControl('', [Validators.required]);  
+  lastName = new FormControl('', [Validators.required]);  
+  email = new FormControl('', [Validators.required, Validators.email]);  
+  password = new FormControl('', [Validators.required, Validators.minLength(6)]);  
+  confirmPassword = new FormControl('', [Validators.required]);  
 
-  // public method
-  getErrorMessage() {
-    if (this.email.hasError('required')) {
-      return 'You must enter an email';
-    }
+  constructor() {}  
 
-    return this.email.hasError('email') ? 'Not a valid email' : '';
-  }
+  // Validation messages  
+  getFirstNameError() {  
+    return this.firstName.hasError('required') ? 'First Name is required' : '';  
+  }  
 
-  loginType = [
-    {
-      image: 'assets/images/authentication/facebook.svg',
-      alt: 'facebook',
-      title: 'Sign In with Facebook'
-    },
-    {
-      image: 'assets/images/authentication/twitter.svg',
-      alt: 'twitter',
-      title: 'Sign In with Twitter'
-    },
-    {
-      image: 'assets/images/authentication/google.svg',
-      alt: 'google',
-      title: 'Sign In with Google'
-    }
-  ];
-}
+  getLastNameError() {  
+    return this.lastName.hasError('required') ? 'Last Name is required' : '';  
+  }  
+
+  getEmailError() {  
+    if (this.email.hasError('required')) {  
+      return 'Email is required';  
+    }  
+    return this.email.hasError('email') ? 'Enter a valid email' : '';  
+  }  
+
+  getPasswordError() {  
+    if (this.password.hasError('required')) {  
+      return 'Password is required';  
+    }  
+    return this.password.hasError('minlength') ? 'Password must be at least 6 characters' : '';  
+  }  
+
+  getConfirmPasswordError() {  
+    if (this.confirmPassword.hasError('required')) {  
+      return 'Confirm Password is required';  
+    }  
+    return this.confirmPassword.value !== this.password.value ? 'Passwords do not match' : '';  
+  }  
+
+  register() {  
+    // Mark all controls as touched to trigger validation messages  
+    this.firstName.markAsTouched();  
+    this.lastName.markAsTouched();  
+    this.email.markAsTouched();  
+    this.password.markAsTouched();  
+    this.confirmPassword.markAsTouched();  
+
+    if (this.firstName.valid && this.lastName.valid && this.email.valid && this.password.valid && this.confirmPassword.valid) {  
+      if (this.password.value !== this.confirmPassword.value) {  
+        // Removed console log here  
+        return;  
+      }  
+      // Removed console log here  
+    } else {  
+      // Removed console log here  
+    }  
+  }  
+}  

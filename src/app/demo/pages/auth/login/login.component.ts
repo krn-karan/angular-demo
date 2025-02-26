@@ -1,59 +1,47 @@
-// angular import
-import { Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';  
+import { FormControl, Validators } from '@angular/forms';  
+import { RouterModule } from '@angular/router';  
+import { Router } from '@angular/router';  
+import { CommonModule } from '@angular/common'; // Import CommonModule for ngIf  
+import { SharedModule } from 'src/app/demo/shared/shared.module';  
 
-// project import
-import { SharedModule } from 'src/app/demo/shared/shared.module';
+@Component({  
+  selector: 'app-login',  
+  standalone: true,  
+  imports: [CommonModule, SharedModule, RouterModule], // Ensure CommonModule and ReactiveFormsModule are imported  
+  templateUrl: './login.component.html',  
+  styleUrls: ['./login.component.scss', '../authentication.scss']  
+})  
+export default class LoginComponent {  
+  // Public properties  
+  hide = true;  
+  email = new FormControl('', [Validators.required, Validators.email]);  
+  password = new FormControl('', [Validators.required]); // Ensure this is a FormControl instance  
+  Email = '';  
 
-@Component({
-  selector: 'app-login',
-  imports: [SharedModule, RouterModule],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss', '../authentication.scss']
-})
-export default class LoginComponent {
-  // public props
-  hide = true;
-  email = new FormControl('', [Validators.required, Validators.email]);
-  Email = '';
-  password = '';
+  // constructor to inject Router  
+  constructor(private router: Router) {}  
 
-  // ✅ Add constructor to inject Router
-  constructor(private router: Router) {}
+  // public method to get error messages for email  
+  getErrorMessage() {  
+    if (this.email.hasError('required')) {  
+      return 'You must enter an email';  
+    }  
+    return this.email.hasError('email') ? 'Not a valid email' : '';  
+  }  
 
-  // public method
-  getErrorMessage() {
-    if (this.email.hasError('required')) {
-      return 'You must enter an email';
-    }
-    return this.email.hasError('email') ? 'Not a valid email' : '';
-  }
+  // login method to handle form submission  
+  login() {  
+    this.email.markAsTouched(); // Mark email as touched  
+    this.password.markAsTouched(); // Mark password as touched  
 
-  login() {
-    if (this.Email === 'demo@gmail.com' && this.password === '1') {
-      this.router.navigate(['/dashboard']); // ✅ Redirects to dashboard
-    } else {
-      console.log('karan'); // ✅ Prints "karan" in the console
-    }
-  }
+    if (this.email.invalid || this.password.invalid) {  
+      return; // Prevent submission if fields are invalid  
+    }  
 
-  // loginType = [
-  //   {
-  //     image: 'assets/images/authentication/facebook.svg',
-  //     alt: 'facebook',
-  //     title: 'Sign In with Facebook'
-  //   },
-  //   {
-  //     image: 'assets/images/authentication/twitter.svg',
-  //     alt: 'twitter',
-  //     title: 'Sign In with Twitter'
-  //   },
-  //   {
-  //     image: 'assets/images/authentication/google.svg',
-  //     alt: 'google',
-  //     title: 'Sign In with Google'
-  //   }
-  // ];
-}
+    // Example login check  
+    if (this.Email === 'demo@gmail.com' && this.password.value === '1') {  
+      this.router.navigate(['/dashboard']); // Redirect to dashboard on successful login  
+    }  
+  }  
+}  
