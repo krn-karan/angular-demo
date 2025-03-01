@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';  
 import { CommonModule } from '@angular/common'; // Import CommonModule for ngIf  
 import { SharedModule } from 'src/app/demo/shared/shared.module';  
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({  
   selector: 'app-login',  
@@ -20,7 +21,7 @@ export default class LoginComponent {
   Email = '';  
 
   // constructor to inject Router  
-  constructor(private router: Router) {}  
+  constructor(private router: Router, private authService: AuthService) {}  
 
   // public method to get error messages for email  
   getErrorMessage() {  
@@ -32,16 +33,21 @@ export default class LoginComponent {
 
   // login method to handle form submission  
   login() {  
-    this.email.markAsTouched(); // Mark email as touched  
-    this.password.markAsTouched(); // Mark password as touched  
-
-    if (this.email.invalid || this.password.invalid) {  
-      return; // Prevent submission if fields are invalid  
+    if (!this.email || !this.password) {  
+      alert('Please enter email and password');  
+      return;
     }  
 
-    // Example login check  
-    if (this.Email === 'demo@gmail.com' && this.password.value === '1') {  
-      this.router.navigate(['/dashboard']); // Redirect to dashboard on successful login  
-    }  
-  }  
+    this.authService.login(this.email.value!, this.password.value!).subscribe(
+      (response: any) => {
+        console.log('Login successful', response);
+        alert('Login successful!');
+        this.router.navigate(['/dashboard']); // ✅ Redirect to dashboard
+      },
+      (error) => {
+        console.error('Login failed', error);
+        alert('Invalid email or password!');
+      }
+    );
+  }
 }  
