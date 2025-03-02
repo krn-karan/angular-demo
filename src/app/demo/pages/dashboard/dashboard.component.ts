@@ -1,154 +1,112 @@
-// angular import
-import { Component, viewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
-// project import
-import { SharedModule } from 'src/app/demo/shared/shared.module';
-import { ChartDB } from 'src/app/fake-data/chartDB';
+export type EthereumUsers = {
+  id: number;
+  Name: string | null;
+  Email: string | null;
+  EthAddress: string | null;
+  Balance: number | null;
+  IsActive: boolean | null;
+  IsDeleted: boolean;
+  CreatedAt: Date;
+  UpdatedAt: Date;
+};
 
-// third party
-import { ApexOptions, ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
+export type EthereumUsersForList = {
+  id: number;
+  name: string | null;
+  email: string | null;
+  ethAddress: string | null;
+  balance: number | null;
+  isActive: boolean | null;
+  isDeleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, SharedModule, NgApexchartsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export default class DashboardComponent {
-  // public props
-  chart = viewChild<ChartComponent>('chart');
-  earningChart: Partial<ApexOptions>;
-  pageViewChart: Partial<ApexOptions>;
-  totalTaskChart: Partial<ApexOptions>;
-  downloadChart: Partial<ApexOptions>;
-  monthlyRevenueChart: Partial<ApexOptions>;
-  totalTasksChart: Partial<ApexOptions>;
-  pendingTasksChart: Partial<ApexOptions>;
-  totalIncomeChart: Partial<ApexOptions>;
+export default class DashboardComponent implements OnInit {
+  userForm: FormGroup;
+  isPopupOpen = false;
+  usersList: EthereumUsersForList[] = [];
 
-  // eslint-disable-next-line
-  chartDB: any;
-
-  // graph color change with theme color mode change
-  preset = ['#4680FF'];
-  monthlyColor = ['#4680FF', '#8996a4'];
-  incomeColors = ['#4680FF', '#E58A00', '#2CA87F', '#b5ccff'];
-
-  // constructor
-  constructor() {
-    this.chartDB = ChartDB;
-    const {
-      earningChart,
-      totalTaskChart,
-      downloadChart,
-      totalTasksChart,
-      pageViewChart,
-      monthlyRevenueChart,
-      pendingTasksChart,
-      totalIncomeChart
-    } = this.chartDB;
-    this.earningChart = earningChart;
-    this.pageViewChart = pageViewChart;
-    this.totalTaskChart = totalTaskChart;
-    this.downloadChart = downloadChart;
-    this.monthlyRevenueChart = monthlyRevenueChart;
-    this.totalTasksChart = totalTasksChart;
-    this.pendingTasksChart = pendingTasksChart;
-    this.totalIncomeChart = totalIncomeChart;
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router  
+  ) {
+    this.userForm = this.fb.group({
+      Name: [''],
+      Email: [''],
+      EthAddress: [''],
+      Balance: [0.0],
+      IsActive: [true]
+    });
   }
 
-  // public method
-  project = [
-    {
-      title: 'Invoice Generator'
-    },
-    {
-      title: 'Package Upgrades'
-    },
-    {
-      title: 'Figma Auto Layout'
-    }
-  ];
+  ngOnInit() {
+    this.loadUsers(); // Load users on component init
+  }
 
-  List_transaction = [
-    {
-      icon: 'AI',
-      name: 'Apple Inc.',
-      time: '#ABLE-PRO-T00232',
-      amount: '$210,000',
-      amount_position: 'ti ti-arrow-down-left',
-      percentage: '10.6%',
-      amount_type: 'text-warn-500'
-    },
-    {
-      icon: 'SM',
-      tooltip: '10,000 Tracks',
-      name: 'Spotify Music',
-      time: '#ABLE-PRO-T10232',
-      amount: '- 10,000',
-      amount_position: 'ti ti-arrow-up-right',
-      percentage: '30.6%',
-      amount_type: 'text-success-500'
-    },
-    {
-      icon: 'MD',
-      bg: 'text-primary-500 bg-primary-50',
-      tooltip: '143 Posts',
-      name: 'Medium',
-      time: '06:30 pm',
-      amount: '-26',
-      amount_position: 'ti ti-arrows-left-right',
-      percentage: '5%',
-      amount_type: 'text-warning-500'
-    },
-    {
-      icon: 'U',
-      tooltip: '143 Posts',
-      name: 'Uber',
-      time: '08:40 pm',
-      amount: '+210,000',
-      amount_position: 'ti ti-arrow-up-right',
-      percentage: '10.6%',
-      amount_type: 'text-success-500'
-    },
-    {
-      icon: 'OC',
-      bg: 'text-warning-500 bg-warning-50',
-      tooltip: '143 Posts',
-      name: 'Ola Cabs',
-      time: '07:40 pm',
-      amount: '+210,000',
-      amount_position: 'ti ti-arrow-up-right',
-      percentage: '10.6%',
-      amount_type: 'text-success-500'
-    }
-  ];
+  // ✅ Fetch Ethereum Users
+  loadUsers() {
+    this.authService.GetEthereumUsers().subscribe({
+      next: (data) => {
+        this.usersList = data; // ✅ Assign correctly
+      },
+      error: (error) => {
+        console.error('Error fetching users:', error);
+      }
+    });
+  }
 
-  income_card = [
-    {
-      background: 'bg-primary-500',
-      item: 'Income',
-      value: '$23,876',
-      number: '+$763,43'
-    },
-    {
-      background: 'bg-warning-500',
-      item: 'Rent',
-      value: '$23,876',
-      number: '+$763,43'
-    },
-    {
-      background: 'bg-success-500',
-      item: 'Download',
-      value: '$23,876',
-      number: '+$763,43'
-    },
-    {
-      background: 'bg-primary-200',
-      item: 'Views',
-      value: '$23,876',
-      number: '+$763,43'
-    }
-  ];
+  // ✅ Open the popup with animation
+  openPopup() {
+    this.isPopupOpen = true;
+  }
+
+  // ✅ Close the popup
+  closePopup() {
+    this.isPopupOpen = false;
+  }
+
+  // ✅ Submit Form Data
+  onSubmit() {
+    const ethereumuser: EthereumUsers = {
+      id: Math.floor(Math.random() * 1000), // Mock ID for fun
+      Name: this.userForm.controls['Name'].value,
+      Email: this.userForm.controls['Email'].value,
+      EthAddress: this.userForm.controls['EthAddress'].value,
+      Balance: this.userForm.controls['Balance'].value,
+      IsActive: this.userForm.controls['IsActive'].value,
+      IsDeleted: false,
+      CreatedAt: new Date(),
+      UpdatedAt: new Date()
+    };
+
+    // Send data to API
+    this.authService.EthereumUsers(ethereumuser).subscribe({
+      next: (response) => {
+        this.loadUsers(); // Refresh table after saving
+        this.closePopup();
+      },
+      error: (error) => {
+        alert("🚨 Invalid email or Ethereum address! Try again.");
+      }
+    });
+  }
+
+  onCancel() {
+    this.closePopup();
+  }
 }

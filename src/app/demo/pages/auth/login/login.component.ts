@@ -23,32 +23,32 @@ export default class LoginComponent {
   // constructor to inject Router  
   constructor(private router: Router, private authService: AuthService) {}  
 
-  // public method to get error messages for email  
   getErrorMessage() {  
     if (this.email.hasError('required')) {  
       return 'You must enter an email';  
     }  
     return this.email.hasError('email') ? 'Not a valid email' : '';  
   }  
-
-  // login method to handle form submission  
+  
   login() {  
-    if (!this.email || !this.password) {  
-      alert('Please enter email and password');  
+    debugger;
+    if (!this.email.value ) {  
+      this.email.markAsTouched();
       return;
-    }  
+    }  else if(!this.password.value){
+      this.password.markAsTouched();
+      return;
+    }
 
     this.authService.login(this.email.value!, this.password.value!).subscribe(
       (response: any) => {
-        console.log('Login successful', response);
-        alert('Login successful!');
         this.router.navigate(['/dashboard']); // ✅ Redirect to dashboard
       },
       (error) => {
-        console.error('Login failed', error);
         alert('Invalid email or password!');
       }
     );
   }
+  
 }  
 
