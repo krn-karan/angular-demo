@@ -1,8 +1,57 @@
-<div class="container mt-5">
-  <button class="btn btn-primary fun-button" (click)="openPopup()">🚀 Add Ethereum User</button>
+<mat-card appearance="outlined">
+  <mat-card-header class="header">
+    <mat-card-title class="medium-font bold">Users List</mat-card-title>
+    <button mat-stroked-button class="header-button" (click)="openPopup()">🚀 Add Ethereum User</button>
+  </mat-card-header>
+  <mat-card-actions>
+    <mat-divider></mat-divider>
+    <!-- Dynamic Material Table -->
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let user"> {{user.id}} </td>
+      </ng-container>
 
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let user"> {{user.name}} </td>
+      </ng-container>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+      </ng-container>
+
+      <!-- Ethereum Address Column -->
+      <ng-container matColumnDef="ethAddress">
+        <th mat-header-cell *matHeaderCellDef> Ethereum Address </th>
+        <td mat-cell *matCellDef="let user"> {{user.ethAddress}} </td>
+      </ng-container>
+
+      <!-- Balance Column -->
+      <ng-container matColumnDef="balance">
+        <th mat-header-cell *matHeaderCellDef> Balance </th>
+        <td mat-cell *matCellDef="let user"> {{user.balance}} </td>
+      </ng-container>
+
+      <!-- Is Active Column -->
+      <ng-container matColumnDef="isActive">
+        <th mat-header-cell *matHeaderCellDef> Is Active </th>
+        <td mat-cell *matCellDef="let user"> {{user.isActive ? 'Yes' : 'No'}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card-actions>
+</mat-card>
+
+<div class="container">
   <!-- Popup -->
-  <div *ngIf="isPopupOpen" class="popup">
+  <div *ngIf="isPopupOpen" class="popup col-4">
     <div class="popup-content">
       <h2>📝 Add Ethereum User</h2>
       
@@ -36,29 +85,8 @@
         <button type="button" class="btn btn-danger" (click)="onCancel()">❌ Cancel</button>
       </form>
     </div>
+    <div class="popup-image">
+      <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google">
+    </div>
   </div>
-
-  <!-- User Table -->
-  <table class="table mt-3" *ngIf="usersList.length > 0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Ethereum Address</th>
-        <th>Balance</th>
-        <th>Is Active</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of usersList">
-        <td>{{ user.id }}</td>
-        <td>{{ user.name }}</td>  <!-- ✅ Change Name → name -->
-        <td>{{ user.email }}</td>  <!-- ✅ Change Email → email -->
-        <td>{{ user.ethAddress }}</td>  <!-- ✅ Change EthAddress → ethAddress -->
-        <td>{{ user.balance }}</td>  <!-- ✅ Change Balance → balance -->
-        <td>{{ user.isActive ? 'Yes' : 'No' }}</td>  <!-- ✅ Change IsActive → isActive -->
-      </tr>
-    </tbody>
-  </table>
 </div>

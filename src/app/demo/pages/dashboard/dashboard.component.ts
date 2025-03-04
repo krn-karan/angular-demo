@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 export type EthereumUsers = {
   id: number;
@@ -31,19 +37,22 @@ export type EthereumUsersForList = {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatTableModule, MatCardModule, MatButtonModule, MatDividerModule, MatFormFieldModule],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class DashboardComponent implements OnInit {
   userForm: FormGroup;
   isPopupOpen = false;
   usersList: EthereumUsersForList[] = [];
+  displayedColumns: string[] = ['id', 'name', 'email', 'ethAddress', 'balance', 'isActive'];
+  dataSource = new MatTableDataSource<EthereumUsersForList>();
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router  
+    private router: Router
   ) {
     this.userForm = this.fb.group({
       Name: [''],
@@ -63,6 +72,7 @@ export default class DashboardComponent implements OnInit {
     this.authService.GetEthereumUsers().subscribe({
       next: (data) => {
         this.usersList = data; // ✅ Assign correctly
+        this.dataSource.data = this.usersList; // ✅ Assign correctly
       },
       error: (error) => {
         console.error('Error fetching users:', error);

@@ -52,7 +52,7 @@
 
 .container {
   text-align: center;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 button {
@@ -78,10 +78,14 @@ button {
   padding: 20px;
   border-radius: 10px;
   width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .popup-actions {
   margin-top: 10px;
+  display: flex;
   display: flex;
   justify-content: space-between;
 }
@@ -91,13 +95,72 @@ button {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
+  background: #f9f9f9;
   padding: 20px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .popup-content {
-  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 60%;
 }
 
+.popup-image {
+  width: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.popup-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  
+  th.mat-header-cell {
+    background-color: #f7f7f7;
+  }
+
+  td.mat-cell {
+    background-color: #f7f7f7;
+  }
+}
+
+.medium-font {
+  font-size: 16px; // Adjust the size as needed
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-button {
+  color: var(--info);
+  background-color: var(--primary-500);
+  color: #fff;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.text-end {
+  color: var(--primary-500);
+}
+
+.btn-success {
+  color: var(--primary-500);
+}

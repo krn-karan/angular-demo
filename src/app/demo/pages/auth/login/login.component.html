@@ -1,44 +1,49 @@
-<div class="auth-main">  
-  <div class="auth-wrapper version-1">  
-    <div class="auth-form">  
-      <div class="auth-background">  
-        <div class="yellow-circle"></div>  
-        <div class="red-circle"></div>  
-      </div>  
-      <div class="main-form">  
-        <app-card [showHeader]="false" class="auth-form-card" [padding]="40">  
-          <h4 class="text-center m-b-25 f-20 f-w-500">Login With Your Email</h4>  
-          <div class="text-start">  
-            <label for="email" class="f-w-500">Enter Your Email</label>  
-            <mat-form-field appearance="outline" class="w-100 m-t-5">  
-              <input matInput [formControl]="email" required [(ngModel)]="Email" placeholder="Enter Email" />  
-              <mat-error *ngIf="email.invalid && (email.touched || email.dirty)">  
-                {{ getErrorMessage() }}  
-              </mat-error>  
-            </mat-form-field>  
-            
-            <label for="password" class="f-w-500">Enter your password</label>  
-            <mat-form-field appearance="outline" class="w-100 m-t-5">  
-              <input matInput [type]="hide ? 'password' : 'text'" [formControl]="password" placeholder="Enter Password" />  
-              <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">  
-                <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>  
-              </button>  
-              <mat-error *ngIf="password.invalid && (password.touched || password.dirty)">  
-                Password is required  
-              </mat-error>  
-            </mat-form-field>  
-          </div>  
-          
-          <div class="grid">  
-            <button mat-flat-button color="primary" class="b-rad-20 m-t-15" (click)="login()">Login</button>  
-          </div>  
-          
-          <div class="check-me m-t-20">  
-            <h6 class="f-w-400 text-muted m-b-0">Don't have an Account?</h6>  
-            <a [routerLink]="['/auth/register']" class="text-primary-500">Create Account</a>  
-          </div>  
-        </app-card>  
-      </div>  
-    </div>  
-  </div>  
-</div>  
+<div class="auth-main">
+  <div class="auth-wrapper">
+    <div class="auth-container">
+      <div class="auth-form-container">
+        <div class="auth-background">
+          <div class="yellow-circle"></div>
+          <div class="red-circle"></div>
+        </div>
+        <div class="main-form">
+          <app-card [showHeader]="false" class="auth-form-card" [padding]="40">
+            <h4 class="text-center m-b-25 f-20 f-w-500">Login With Your Email</h4>
+            <div class="text-start">
+              <label for="email" class="f-w-500">Enter Your Email</label>
+              <mat-form-field appearance="outline" class="w-100 m-t-5">
+                <input matInput [formControl]="email" required [(ngModel)]="Email" placeholder="Enter Email" />
+                <mat-error *ngIf="email.invalid && (email.touched || email.dirty)">
+                  {{ getErrorMessage() }}
+                </mat-error>
+              </mat-form-field>
+
+              <label for="password" class="f-w-500">Enter your password</label>
+              <mat-form-field appearance="outline" class="w-100 m-t-5">
+                <input matInput [type]="hide ? 'password' : 'text'" [formControl]="password" placeholder="Enter Password" />
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error *ngIf="password.invalid && (password.touched || password.dirty)">
+                  Password is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="grid">
+              <button mat-flat-button color="primary" class="b-rad-20 m-t-15" (click)="login()">Login</button>
+            </div>
+
+            <div class="check-me m-t-20">
+              <h6 class="f-w-400 text-muted m-b-0">Don't have an Account?</h6>
+              <a [routerLink]="['/auth/register']" class="text-primary-500">Create Account</a>
+            </div>
+          </app-card>
+        </div>
+      </div>
+      <div class="image-container">
+        <img src="https://woopsacdn.blob.core.windows.net/weborder-images/customer-bg.webp" alt="Static Image" class="static-image" />
+      </div>
+    </div>
+  </div>
+</div>

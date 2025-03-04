@@ -1,0 +1,31 @@
+.auth-container {
+    display: flex;
+    width: 100%;
+    /* Center the container horizontally */
+}
+
+.auth-form-container {
+    display: flex; /* Enable flexbox */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    width: 33%;
+    height: 100vh;
+    /* Set height to 100% of the viewport height */
+    background-color: #c9cbd1;
+    /* Set background color to grey */
+    padding: 20px;
+    /* Optional padding */
+    box-sizing: border-box;
+    /* Include padding in height calculation */
+}
+
+.image-container {
+    width: 66%;
+}
+
+.static-image {
+    width: 100%;
+    /* Make the image responsive */
+    height: 100vh;
+    /* Maintain aspect ratio */
+}
