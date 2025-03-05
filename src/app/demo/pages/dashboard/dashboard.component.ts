@@ -124,6 +124,7 @@ export default class DashboardComponent implements OnInit {
 
   // ✅ Submit Form Data
   onSubmit() {
+    debugger;
     const ethereumuser: EthereumUsers = {
       id: Math.floor(Math.random() * 1000), // Mock ID for fun
       Name: this.userForm.controls['Name'].value,

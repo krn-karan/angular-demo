@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import { ethers } from 'ethers';
 import { Buffer } from 'buffer';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -39,26 +40,42 @@ export class BlockchainService {
             "type": "address"
           }
         ],
-        "name": "User Added",
+        "name": "User  Added",
         "type": "event"
       }
     ];
     this.contract = new this.web3.eth.Contract(abi, contractAddress);
   }
 
-  async addUser(privateKey: any, userData: any) {
+  async addUser (privateKey: string, userData: any) {
+    debugger;
     try {
       const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
       this.web3.eth.accounts.wallet.add(account);
+  
+      // Check the account balance
+      const balance = await this.web3.eth.getBalance(account.address);
+      console.log('Account Balance:', ethers.formatEther(balance), 'ETH');
+  
+      // Calculate the transaction cost
+      const currentGasPrice = await this.web3.eth.getGasPrice();
+      const gasLimit = 210000; // Adjust as necessary
+      const transactionCost = BigInt(currentGasPrice) * BigInt(gasLimit);
+  
+      if (BigInt(balance) < transactionCost) {
+        throw new Error('Insufficient funds to cover transaction cost');
+      }
   
       const nonce = await this.web3.eth.getTransactionCount(account.address);
       const jsonString = JSON.stringify(userData);
   
       const encoder = new TextEncoder();
       const byteArray = encoder.encode(jsonString);
-  
-      // Convert byteArray to hex string
       const dataHex = '0x' + Buffer.from(byteArray).toString('hex');
+  
+      // Set the gas prices with a buffer
+      const maxPriorityFeePerGas = ethers.parseUnits((parseFloat(ethers.formatUnits(currentGasPrice, 'gwei')) + 10).toString(), 'gwei').toString();
+      const maxFeePerGas = ethers.parseUnits((parseFloat(ethers.formatUnits(currentGasPrice, 'gwei')) + 20).toString(), 'gwei').toString();
   
       const tx = {
         from: account.address,
@@ -67,10 +84,10 @@ export class BlockchainService {
         nonce: nonce,
         data: dataHex,
         value: '0x0',
-        gas: 210000,
-        maxPriorityFeePerGas: ethers.parseUnits('2', 'gwei').toString(), // or adjust as needed
-        maxFeePerGas: ethers.parseUnits('30', 'gwei').toString(), // Adjust based on current market rates
-        gasLimit: 27880 // Ensure this is sufficient for your transaction
+        gas: gasLimit,
+        maxPriorityFeePerGas: maxPriorityFeePerGas,
+        maxFeePerGas: maxFeePerGas,
+        gasLimit: gasLimit
       };
   
       const signedTx = await this.web3.eth.accounts.signTransaction(tx, privateKey);
