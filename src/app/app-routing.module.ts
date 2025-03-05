@@ -27,7 +27,11 @@ const routes: Routes = [
       {
         path: 'sample-page',
         loadComponent: () => import('./demo/pages/other/sample-page/sample-page.component')
-      }
+      },
+      {
+        path: 'generate-transaction',
+        loadComponent: () => import('./demo/pages/other/generate-transaction/generate-transaction.component')
+      },
     ]
   },
   {

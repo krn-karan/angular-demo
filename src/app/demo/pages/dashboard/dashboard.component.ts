@@ -34,6 +34,20 @@ export type EthereumUsersForList = {
   updatedAt: Date;
 };
 
+export type CreatedUsersForList = {
+  id: number;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  password: number | null;
+};
+
+
+export type SelectUserList = {
+  name: string;
+  value: number;
+};
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -46,6 +60,8 @@ export default class DashboardComponent implements OnInit {
   userForm: FormGroup;
   isPopupOpen = false;
   usersList: EthereumUsersForList[] = [];
+  createdUsersForList: CreatedUsersForList[] = [];
+  selectUserList: SelectUserList[] = [{ name: 'Select User', value: 0 }];
   displayedColumns: string[] = ['id', 'name', 'email', 'ethAddress', 'balance', 'isActive'];
   dataSource = new MatTableDataSource<EthereumUsersForList>();
 
@@ -65,6 +81,22 @@ export default class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadUsers(); // Load users on component init
+    this.loadUserDropdownList(); 
+  }
+
+  loadUserDropdownList() {debugger
+    this.authService.GetLoginUsers().subscribe({
+      next: (data) => {
+        this.createdUsersForList = data; // 
+        this.selectUserList = this.createdUsersForList.map(user => ({
+          name: user.firstName || 'Unknown' + user.lastName || 'Unknown',      
+          value: user.id || 0    
+        }));debugger
+      },
+      error: (error) => {
+        console.error('Error fetching users:', error);
+      }
+    });
   }
 
   // ✅ Fetch Ethereum Users

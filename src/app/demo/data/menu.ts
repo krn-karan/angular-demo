@@ -186,6 +186,16 @@ export const menus: Navigation[] = [
         classes: 'nav-item',
         url: '/sample-page',
         icon: '#custom-notification-status'
+      },
+      {
+        id: 'addUser',
+        title: 'addUser',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/generate-transaction',
+        icon: '#custom-password-check',
+        target: true,
+        breadcrumbs: false
       }
     ]
   }

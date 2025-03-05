@@ -20,6 +20,11 @@ export class AuthService {
     return this.http.get(url);
   }
 
+  GetLoginUsers(): Observable<any> {
+    const url = `${this.apiUrl}/GetLoginUsers`;
+    return this.http.get(url);
+  }
+
   GetEthereumUsers(): Observable<any> {
     const url = `${this.apiUrl}/GetEthereumUsers`;
     return this.http.get(url);

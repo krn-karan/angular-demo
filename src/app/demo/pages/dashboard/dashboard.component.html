@@ -56,6 +56,15 @@
       <h2>📝 Add Ethereum User</h2>
       
       <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+        <div class="mb-3">
+          <label>Select Users</label>
+          <select class="form-control" formControlName="Users">
+            <option value="" disabled selected>Select Users</option>
+            <option *ngFor="let ulist of this.selectUserList" [value]="ulist.value" >{{ ulist.name }}</option>
+        </select>
+      </div>
+
         <div class="mb-3">
           <label>Name:</label>
           <input type="text" class="form-control" formControlName="Name">
