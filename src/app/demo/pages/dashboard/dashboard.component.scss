@@ -109,20 +109,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 60%;
-}
-
-.popup-image {
-  width: 35%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.popup-image img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
+  width: 100%;
 }
 
 table {

@@ -9,11 +9,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { BlockchainService } from 'src/app/services/blockchain.service';
 
 export type EthereumUsers = {
   id: number;
   Name: string | null;
   Email: string | null;
+  Hash: string | null;
   EthAddress: string | null;
   Balance: number | null;
   IsActive: boolean | null;
@@ -27,6 +29,7 @@ export type EthereumUsersForList = {
   name: string | null;
   email: string | null;
   ethAddress: string | null;
+  Hash: string | null;
   balance: number | null;
   isActive: boolean | null;
   isDeleted: boolean;
@@ -41,7 +44,6 @@ export type CreatedUsersForList = {
   email: string | null;
   password: number | null;
 };
-
 
 export type SelectUserList = {
   name: string;
@@ -62,12 +64,14 @@ export default class DashboardComponent implements OnInit {
   usersList: EthereumUsersForList[] = [];
   createdUsersForList: CreatedUsersForList[] = [];
   selectUserList: SelectUserList[] = [{ name: 'Select User', value: 0 }];
-  displayedColumns: string[] = ['id', 'name', 'email', 'ethAddress', 'balance', 'isActive'];
+  displayedColumns: string[] = ['id', 'name', 'email', 'ethAddress', 'balance', 'Hash'];
   dataSource = new MatTableDataSource<EthereumUsersForList>();
+  privateKey: string = '0x9f690e519c71544d4939982ec93328059ff592ff406d2d2d6ff68ea9c0052195';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private blockchainService: BlockchainService,
     private router: Router
   ) {
     this.userForm = this.fb.group({
@@ -75,23 +79,23 @@ export default class DashboardComponent implements OnInit {
       Email: [''],
       EthAddress: [''],
       Balance: [0.0],
-      IsActive: [true]
+      Hash: [''] 
     });
   }
 
   ngOnInit() {
-    this.loadUsers(); // Load users on component init
-    this.loadUserDropdownList(); 
+    this.loadUsers();
+    this.loadUserDropdownList();
   }
 
-  loadUserDropdownList() {debugger
+  loadUserDropdownList() {
     this.authService.GetLoginUsers().subscribe({
       next: (data) => {
-        this.createdUsersForList = data; // 
+        this.createdUsersForList = data;
         this.selectUserList = this.createdUsersForList.map(user => ({
-          name: user.firstName || 'Unknown' + user.lastName || 'Unknown',      
-          value: user.id || 0    
-        }));debugger
+          name: (user.firstName || 'Unknown') + ' ' + (user.lastName || 'Unknown'),
+          value: user.id || 0
+        }));
       },
       error: (error) => {
         console.error('Error fetching users:', error);
@@ -99,12 +103,13 @@ export default class DashboardComponent implements OnInit {
     });
   }
 
-  // ✅ Fetch Ethereum Users
   loadUsers() {
+    debugger;
     this.authService.GetEthereumUsers().subscribe({
       next: (data) => {
-        this.usersList = data; // ✅ Assign correctly
-        this.dataSource.data = this.usersList; // ✅ Assign correctly
+        debugger;
+        this.usersList = data;
+        this.dataSource.data = this.usersList;
       },
       error: (error) => {
         console.error('Error fetching users:', error);
@@ -112,41 +117,75 @@ export default class DashboardComponent implements OnInit {
     });
   }
 
-  // ✅ Open the popup with animation
   openPopup() {
     this.isPopupOpen = true;
   }
 
-  // ✅ Close the popup
+  async FetchuserDetails() {
+    debugger;
+    const userAddress = '0x0149EA6f5dFf73289F7D5dd79600a32A986a67d6';
+    try {
+      const Detail = await this.blockchainService.fetchUserHistory(userAddress);
+      console.log('Fetched User Details:', Detail);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  
   closePopup() {
     this.isPopupOpen = false;
   }
 
-  // ✅ Submit Form Data
-  onSubmit() {
+  async onSubmit() {
     debugger;
     const ethereumuser: EthereumUsers = {
-      id: Math.floor(Math.random() * 1000), // Mock ID for fun
+      id: Math.floor(Math.random() * 1000),
       Name: this.userForm.controls['Name'].value,
       Email: this.userForm.controls['Email'].value,
       EthAddress: this.userForm.controls['EthAddress'].value,
       Balance: this.userForm.controls['Balance'].value,
-      IsActive: this.userForm.controls['IsActive'].value,
+      IsActive: true,
+      Hash: '',
       IsDeleted: false,
       CreatedAt: new Date(),
       UpdatedAt: new Date()
     };
 
-    // Send data to API
-    this.authService.EthereumUsers(ethereumuser).subscribe({
-      next: (response) => {
-        this.loadUsers(); // Refresh table after saving
-        this.closePopup();
-      },
-      error: (error) => {
-        alert("🚨 Invalid email or Ethereum address! Try again.");
-      }
-    });
+    try {
+      debugger;
+      // const txHash = await this.blockchainService.addUser(this.privateKey, {
+      //   username: ethereumuser.id,
+      //   email: ethereumuser.Email,
+      //   password: 'securePassword123',
+      //   firstName: ethereumuser.Name,
+      //   lastName: '',
+      //   dateOfBirth: '1990-01-01',
+      //   address: {
+      //     street: '123 Demo St',
+      //     city: 'Demo City',
+      //     state: 'DC',
+      //     zipCode: '12345',
+      //     country: 'USA'
+      //   },
+      //   phoneNumber: '+1234567890',
+      //   profilePicture: 'https://example.com/path/to/profile/picture.jpg',
+      //   createdAt: new Date().toISOString(),
+      //   updatedAt: new Date().toISOString()
+      // });
+      ethereumuser.Hash = ""; // Store the transaction hash
+
+      this.authService.EthereumUsers(ethereumuser).subscribe({
+        next: () => {
+          this.loadUsers();
+          this.closePopup();
+        },
+        error: (error) => {
+          alert("🚨 Invalid email or Ethereum address! Try again.");
+        }
+      });
+    } catch (error) {
+      console.error('Error adding user:', error);
+    }
   }
 
   onCancel() {

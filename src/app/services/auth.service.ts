@@ -30,6 +30,7 @@ export class AuthService {
     return this.http.get(url);
   }
   EthereumUsers(ethereumuser: EthereumUsers): Observable<any> {
+    debugger;
     const url = `${this.apiUrl}/PostEthereumUsers`;
     console.log('API URL:', url);  // ✅ Print URL in console
     return this.http.post(url, ethereumuser);

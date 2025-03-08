@@ -48,8 +48,8 @@ export class BlockchainService {
   }
 
   async addUser (privateKey: string, userData: any) {
-    debugger;
     try {
+      debugger;
       const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
       this.web3.eth.accounts.wallet.add(account);
   
@@ -99,4 +99,24 @@ export class BlockchainService {
       throw new Error('Transaction failed');
     }
   }
+
+  async fetchUserHistory(userAddress: string) {
+    try {
+      const pastEvents = await this.contract.getPastEvents('User  Added', {
+        filter: { user: userAddress }, // Filter by user address
+        fromBlock: 0, // Fetch from the first block
+        toBlock: 'latest' // Fetch up to the latest block
+      });
+  
+      console.log('User History:', pastEvents);
+      return pastEvents;
+    } catch (error) {
+      console.error('Error fetching user history:', error);
+      throw new Error('Failed to fetch user history');
+    }
+  }
+  
+  
+  
+  
 }
