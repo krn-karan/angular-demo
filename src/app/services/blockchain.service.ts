@@ -1,122 +1,83 @@
 import { Injectable } from '@angular/core';
-import Web3 from 'web3';
 import { ethers } from 'ethers';
-import { Buffer } from 'buffer';
-
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';  // Import environment
 
 @Injectable({
   providedIn: 'root'
 })
 export class BlockchainService {
-  private web3: Web3;
-  private contract: any; // Replace with your contract type
+  private provider: ethers.JsonRpcProvider;
+  private wallet: ethers.Wallet;
+  private contractAddress = environment.CONTRACT_ADDRESS;
+  private abi: ethers.InterfaceAbi = [];
 
-  constructor() {
-    // Connect to the XRP EVM network
-    this.web3 = new Web3('https://rpc-evm-sidechain.xrpl.org/');
-    // Initialize your contract here
-    const contractAddress = '0x0149EA6f5dFf73289F7D5dd79600a32A986a67d6';
-    const abi = [
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "userName",
-            "type": "string"
-          }
-        ],
-        "name": "addUser ",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "name": "user",
-            "type": "address"
-          }
-        ],
-        "name": "User  Added",
-        "type": "event"
-      }
-    ];
-    this.contract = new this.web3.eth.Contract(abi, contractAddress);
+  constructor(private http: HttpClient) {
+    debugger;
+    // Use environment variables for endpoint and private key
+    const providerUrl = environment.RPC_URL;
+    const privateKey = environment.PRIVATE_KEY;
+
+    // Connect to the XRP EVM Sidechain network
+    this.provider = new ethers.JsonRpcProvider(providerUrl);
+
+    // Initialize signer with private key
+    this.wallet = new ethers.Wallet(privateKey, this.provider);
+
+    console.log('Signer Address:', this.wallet.address);
+
+    // Fetch contract ABI
+    this.fetchABI().then(abi => this.abi = abi);
   }
 
-  async addUser (privateKey: string, userData: any) {
+  // Fetch and parse the ABI from the local JSON file
+  async fetchABI(): Promise<any> {
+    try {
+      const response = await this.http.get('/assets/abi.json').toPromise();
+      console.log('ABI fetched successfully:', response);
+      return response;
+    } catch (error) {
+      console.error('Error fetching ABI:', error);
+      throw new Error('Failed to fetch contract ABI');
+    }
+  }
+
+  // Function to add a user to the blockchain
+  async addUser(userId: number, userName: string, email: string, ethereumAddress: string, contactNumber: string): Promise<string> {
+    debugger;
+    if (!this.abi) {
+      this.abi = await this.fetchABI();
+    }
+  
+    // Creating contract instance
+    const contract = new ethers.Contract("0x7F8b29DA30E24fa94Aa5F844502bE9c8361bA34b", this.abi, this.wallet) as ethers.Contract & { addUser: Function };
+    const contractWithSigner = contract.connect(this.wallet) as ethers.Contract & { addUser: Function };
+  
     try {
       debugger;
-      const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
-      this.web3.eth.accounts.wallet.add(account);
+      // Correcting parameter order and adding the contact number
+      const transactionResponse = await contractWithSigner.addUser(userId, ethereumAddress, userName, email,contactNumber);
   
-      // Check the account balance
-      const balance = await this.web3.eth.getBalance(account.address);
-      console.log('Account Balance:', ethers.formatEther(balance), 'ETH');
-  
-      // Calculate the transaction cost
-      const currentGasPrice = await this.web3.eth.getGasPrice();
-      const gasLimit = 210000; // Adjust as necessary
-      const transactionCost = BigInt(currentGasPrice) * BigInt(gasLimit);
-  
-      if (BigInt(balance) < transactionCost) {
-        throw new Error('Insufficient funds to cover transaction cost');
-      }
-  
-      const nonce = await this.web3.eth.getTransactionCount(account.address);
-      const jsonString = JSON.stringify(userData);
-  
-      const encoder = new TextEncoder();
-      const byteArray = encoder.encode(jsonString);
-      const dataHex = '0x' + Buffer.from(byteArray).toString('hex');
-  
-      // Set the gas prices with a buffer
-      const maxPriorityFeePerGas = ethers.parseUnits((parseFloat(ethers.formatUnits(currentGasPrice, 'gwei')) + 10).toString(), 'gwei').toString();
-      const maxFeePerGas = ethers.parseUnits((parseFloat(ethers.formatUnits(currentGasPrice, 'gwei')) + 20).toString(), 'gwei').toString();
-  
-      const tx = {
-        from: account.address,
-        to: this.contract.options.address,
-        chainId: 1440002,
-        nonce: nonce,
-        data: dataHex,
-        value: '0x0',
-        gas: gasLimit,
-        maxPriorityFeePerGas: maxPriorityFeePerGas,
-        maxFeePerGas: maxFeePerGas,
-        gasLimit: gasLimit
-      };
-  
-      const signedTx = await this.web3.eth.accounts.signTransaction(tx, privateKey);
-      const receipt = await this.web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-  
-      return receipt.transactionHash;
+      // Wait for the transaction to be mined
+      const receipt = await transactionResponse.wait();
+      console.log('Transaction successful:', receipt);
+      return `User added successfully. Transaction hash: ${receipt.transactionHash}`;
     } catch (error) {
-      console.error('Transaction Error:', error);
-      throw new Error('Transaction failed');
+      console.error('Transaction failed:', error);
+      throw new Error('Failed to add user. Please try again.');
     }
   }
+  
 
-  async fetchUserHistory(userAddress: string) {
-    try {
-      const pastEvents = await this.contract.getPastEvents('User  Added', {
-        filter: { user: userAddress }, // Filter by user address
-        fromBlock: 0, // Fetch from the first block
-        toBlock: 'latest' // Fetch up to the latest block
-      });
-  
-      console.log('User History:', pastEvents);
-      return pastEvents;
-    } catch (error) {
-      console.error('Error fetching user history:', error);
-      throw new Error('Failed to fetch user history');
+  // Wrapper to call addUser and handle additional logic if needed
+  async sendTransaction(userId: number, userName: string, email: string, ethereumAddress: string, contactNumber: string): Promise<string> {
+      try {
+        const addUserTxHash = await this.addUser(userId, userName, email, ethereumAddress, contactNumber);
+        console.log('User added with transaction hash:', addUserTxHash);
+        return addUserTxHash;
+      } catch (error) {
+        console.error('sendTransaction error:', error);
+        throw error;
+      }
     }
-  }
-  
-  
-  
-  
 }

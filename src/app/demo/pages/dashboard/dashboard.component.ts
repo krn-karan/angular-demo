@@ -124,69 +124,105 @@ export default class DashboardComponent implements OnInit {
   async FetchuserDetails() {
     debugger;
     const userAddress = '0x0149EA6f5dFf73289F7D5dd79600a32A986a67d6';
-    try {
-      const Detail = await this.blockchainService.fetchUserHistory(userAddress);
-      console.log('Fetched User Details:', Detail);
-    } catch (error) {
-      console.error('Error:', error);
-    }
+    // try {
+    //   //const Detail = await this.blockchainService.fetchUserHistory(userAddress);
+    //   console.log('Fetched User Details:', Detail);
+    // } catch (error) {
+    //   console.error('Error:', error);
+    // }
   }
   
   closePopup() {
     this.isPopupOpen = false;
   }
 
+  // async onSubmit() {
+  //   debugger;
+  //   const ethereumuser: EthereumUsers = {
+  //     id: Math.floor(Math.random() * 1000),
+  //     Name: this.userForm.controls['Name'].value,
+  //     Email: this.userForm.controls['Email'].value,
+  //     EthAddress: this.userForm.controls['EthAddress'].value,
+  //     Balance: this.userForm.controls['Balance'].value,
+  //     IsActive: true,
+  //     Hash: '',
+  //     IsDeleted: false,
+  //     CreatedAt: new Date(),
+  //     UpdatedAt: new Date()
+  //   };
+
+  //   try {
+  //     debugger;
+
+  //     const txHash =  this.blockchainService.sendTransaction()
+  //       .then(hash => {
+  //         console.log("Transaction Hash:", hash);
+  //       })
+  //       .catch(error => {
+  //         console.error("Error:", error);
+  //       });
+      
+  //     ethereumuser.Hash = ""; // Store the transaction hash
+
+  //     this.authService.EthereumUsers(ethereumuser).subscribe({
+  //       next: () => {
+  //         this.loadUsers();
+  //         this.closePopup();
+  //       },
+  //       error: (error) => {
+  //         alert("🚨 Invalid email or Ethereum address! Try again.");
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.error('Error adding user:', error);
+  //   }
+  // }
+
   async onSubmit() {
-    debugger;
-    const ethereumuser: EthereumUsers = {
-      id: Math.floor(Math.random() * 1000),
-      Name: this.userForm.controls['Name'].value,
-      Email: this.userForm.controls['Email'].value,
-      EthAddress: this.userForm.controls['EthAddress'].value,
-      Balance: this.userForm.controls['Balance'].value,
+    debugger; 
+    const hardcodedUser: EthereumUsers = {
+      id: 1013,
+      Name: "Karan" as string,
+      Email: "kr.774561@gmail.com",
+      EthAddress: "0x0149EA6f5dFf73289F7D5dd79600a32A986a67d6",
+      Balance: 0,
       IsActive: true,
       Hash: '',
       IsDeleted: false,
       CreatedAt: new Date(),
       UpdatedAt: new Date()
     };
-
+  
     try {
-      debugger;
-      // const txHash = await this.blockchainService.addUser(this.privateKey, {
-      //   username: ethereumuser.id,
-      //   email: ethereumuser.Email,
-      //   password: 'securePassword123',
-      //   firstName: ethereumuser.Name,
-      //   lastName: '',
-      //   dateOfBirth: '1990-01-01',
-      //   address: {
-      //     street: '123 Demo St',
-      //     city: 'Demo City',
-      //     state: 'DC',
-      //     zipCode: '12345',
-      //     country: 'USA'
-      //   },
-      //   phoneNumber: '+1234567890',
-      //   profilePicture: 'https://example.com/path/to/profile/picture.jpg',
-      //   createdAt: new Date().toISOString(),
-      //   updatedAt: new Date().toISOString()
-      // });
-      ethereumuser.Hash = ""; // Store the transaction hash
-
-      this.authService.EthereumUsers(ethereumuser).subscribe({
+      const txHash = await this.blockchainService.sendTransaction(
+        hardcodedUser.id,
+        hardcodedUser.Name!,
+        hardcodedUser.Email!,
+        hardcodedUser.EthAddress!,
+        '9408513093' // Add the contact number here
+      );
+  
+      console.log("✅ Transaction Hash:", txHash);
+      hardcodedUser.Hash = txHash;
+  
+      this.authService.EthereumUsers(hardcodedUser).subscribe({
         next: () => {
           this.loadUsers();
           this.closePopup();
+          console.log("✅ User saved to backend");
         },
         error: (error) => {
-          alert("🚨 Invalid email or Ethereum address! Try again.");
+          console.error("❌ API Error:", error);
+          alert("🚨 Failed to save user data to backend.");
         }
       });
+  
     } catch (error) {
-      console.error('Error adding user:', error);
+      console.error("❌ Blockchain Error:", error);
+      alert("🚨 Failed to send transaction on blockchain.");
     }
   }
+  
 
   onCancel() {
     this.closePopup();

@@ -9,9 +9,11 @@ export const environment = {
   production: false,
   RPC_URL: 'https://rpc-evm-sidechain.xrpl.org/',
   CHAIN_ID: '1440002',
-  PRIVATE_KEY: '0xae8f36cfd0850cda1c5ecaa2d0728efe76bf4d7ff883553d3914662b69b3494b',
-  CONTRACT_ADDRESS:'0x1b0224bC6C8ee261d70FddC6dF614588fc56336C' 
+  PRIVATE_KEY: '9f690e519c71544d4939982ec93328059ff592ff406d2d2d6ff68ea9c0052195',
+  CONTRACT_ADDRESS:'0x0149ea6f5dff73289f7d5dd79600a32a986a67d6' 
 };
+
+
 
 /*
  * For easier debugging in development mode, you can import the following file
