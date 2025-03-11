@@ -13,7 +13,6 @@ export class BlockchainService {
   private abi: ethers.InterfaceAbi = [];
 
   constructor(private http: HttpClient) {
-    debugger;
     // Use environment variables for endpoint and private key
     const providerUrl = environment.RPC_URL;
     const privateKey = environment.PRIVATE_KEY;
@@ -44,24 +43,22 @@ export class BlockchainService {
 
   // Function to add a user to the blockchain
   async addUser(userId: number, userName: string, email: string, ethereumAddress: string, contactNumber: string): Promise<string> {
-    debugger;
     if (!this.abi) {
       this.abi = await this.fetchABI();
     }
   
     // Creating contract instance
-    const contract = new ethers.Contract("0x7F8b29DA30E24fa94Aa5F844502bE9c8361bA34b", this.abi, this.wallet) as ethers.Contract & { addUser: Function };
+    const contract = new ethers.Contract(this.contractAddress, this.abi, this.wallet) as ethers.Contract & { addUser: Function };
     const contractWithSigner = contract.connect(this.wallet) as ethers.Contract & { addUser: Function };
   
     try {
-      debugger;
       // Correcting parameter order and adding the contact number
       const transactionResponse = await contractWithSigner.addUser(userId, ethereumAddress, userName, email,contactNumber);
   
       // Wait for the transaction to be mined
       const receipt = await transactionResponse.wait();
       console.log('Transaction successful:', receipt);
-      return `User added successfully. Transaction hash: ${receipt.transactionHash}`;
+      return `${receipt.hash}`;
     } catch (error) {
       console.error('Transaction failed:', error);
       throw new Error('Failed to add user. Please try again.');

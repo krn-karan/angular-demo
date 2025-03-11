@@ -75,6 +75,7 @@ export default class DashboardComponent implements OnInit {
     private router: Router
   ) {
     this.userForm = this.fb.group({
+      Id: [''],
       Name: [''],
       Email: [''],
       EthAddress: [''],
@@ -104,10 +105,8 @@ export default class DashboardComponent implements OnInit {
   }
 
   loadUsers() {
-    debugger;
     this.authService.GetEthereumUsers().subscribe({
       next: (data) => {
-        debugger;
         this.usersList = data;
         this.dataSource.data = this.usersList;
       },
@@ -121,71 +120,19 @@ export default class DashboardComponent implements OnInit {
     this.isPopupOpen = true;
   }
 
-  async FetchuserDetails() {
-    debugger;
-    const userAddress = '0x0149EA6f5dFf73289F7D5dd79600a32A986a67d6';
-    // try {
-    //   //const Detail = await this.blockchainService.fetchUserHistory(userAddress);
-    //   console.log('Fetched User Details:', Detail);
-    // } catch (error) {
-    //   console.error('Error:', error);
-    // }
-  }
-  
-  closePopup() {
-    this.isPopupOpen = false;
-  }
-
-  // async onSubmit() {
-  //   debugger;
-  //   const ethereumuser: EthereumUsers = {
-  //     id: Math.floor(Math.random() * 1000),
-  //     Name: this.userForm.controls['Name'].value,
-  //     Email: this.userForm.controls['Email'].value,
-  //     EthAddress: this.userForm.controls['EthAddress'].value,
-  //     Balance: this.userForm.controls['Balance'].value,
-  //     IsActive: true,
-  //     Hash: '',
-  //     IsDeleted: false,
-  //     CreatedAt: new Date(),
-  //     UpdatedAt: new Date()
-  //   };
-
-  //   try {
-  //     debugger;
-
-  //     const txHash =  this.blockchainService.sendTransaction()
-  //       .then(hash => {
-  //         console.log("Transaction Hash:", hash);
-  //       })
-  //       .catch(error => {
-  //         console.error("Error:", error);
-  //       });
-      
-  //     ethereumuser.Hash = ""; // Store the transaction hash
-
-  //     this.authService.EthereumUsers(ethereumuser).subscribe({
-  //       next: () => {
-  //         this.loadUsers();
-  //         this.closePopup();
-  //       },
-  //       error: (error) => {
-  //         alert("🚨 Invalid email or Ethereum address! Try again.");
-  //       }
-  //     });
-  //   } catch (error) {
-  //     console.error('Error adding user:', error);
-  //   }
-  // }
 
   async onSubmit() {
-    debugger; 
     const hardcodedUser: EthereumUsers = {
-      id: 1013,
-      Name: "Karan" as string,
-      Email: "kr.774561@gmail.com",
-      EthAddress: "0x0149EA6f5dFf73289F7D5dd79600a32A986a67d6",
-      Balance: 0,
+      id: this.userForm.controls['Id'].value,
+      //Id: 1234,
+      // Name: "Karan yt" as string,
+      // Email: "mansibgami23@gmail.com",
+      // EthAddress: "0x0149EA6f5dFf73289F7D5dd79600a32A986a67d6",
+      // Balance: 0,
+      Name: this.userForm.controls['Name'].value,
+      Email: this.userForm.controls['Email'].value,
+      EthAddress: this.userForm.controls['EthAddress'].value,
+      Balance: this.userForm.controls['Balance'].value,
       IsActive: true,
       Hash: '',
       IsDeleted: false,
@@ -224,7 +171,7 @@ export default class DashboardComponent implements OnInit {
   }
   
 
-  onCancel() {
-    this.closePopup();
-  }
+ closePopup() {
+  this.isPopupOpen = false;
+}
 }

@@ -1,8 +1,7 @@
 <mat-card appearance="outlined">
   <mat-card-header class="header">
     <mat-card-title class="medium-font bold">Users List</mat-card-title>
-    <button mat-stroked-button class="header-button" (click)="openPopup()">🚀 Add Ethereum User</button>
-    <button mat-stroked-button class="header-button" (click)="FetchuserDetails()">🚀 Fetch User</button>
+    <button mat-stroked-button class="header-button" (click)="openPopup()">Add Ethereum User</button>
   </mat-card-header>
   <mat-card-actions>
     <mat-divider></mat-divider>
@@ -54,40 +53,51 @@
   <!-- Popup -->
   <div *ngIf="isPopupOpen" class="popup col-4">
     <div class="popup-content">
-      <h2>📝 Add Ethereum User</h2>
-      
-      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-
-        <div class="mb-3">
-          <label>Select Users</label>
-          <select class="form-control" formControlName="Users">
-            <option value="" disabled selected>Select Users</option>
-            <option *ngFor="let ulist of this.selectUserList" [value]="ulist.value" >{{ ulist.name }}</option>
-        </select>
+      <!-- Transaction Header (added) -->
+      <div class="transaction-header">
+        <p>🔄 Transaction</p>
       </div>
 
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Select Users Field -->
         <div class="mb-3">
-          <label>Name:</label>
-          <input type="text" class="form-control" formControlName="Name">
+          <label for="userSelect">Select Users</label>
+          <select class="form-control" formControlName="Id" id="userSelect">
+            <option value="" disabled selected>Select Users</option>
+            <option *ngFor="let ulist of this.selectUserList" [value]="ulist.value">{{ ulist.name }}</option>
+          </select>
         </div>
 
+        <!-- Name Field -->
         <div class="mb-3">
-          <label>Email:</label>
-          <input type="email" class="form-control" formControlName="Email">
+          <label for="name">Name:</label>
+          <input type="text" class="form-control" formControlName="Name" id="name">
         </div>
 
+        <!-- Email Field -->
         <div class="mb-3">
-          <label>EthAddress:</label>
-          <input type="text" class="form-control" formControlName="EthAddress">
+          <label for="email">Email:</label>
+          <input type="email" class="form-control" formControlName="Email" id="email">
         </div>
 
+        <!-- Ethereum Address Field -->
         <div class="mb-3">
-          <label>Balance:</label>
-          <input type="number" class="form-control" formControlName="Balance">
+          <label for="ethAddress">EthAddress:</label>
+          <input type="text" class="form-control" formControlName="EthAddress" id="ethAddress">
         </div>
 
-        <button type="submit" class="btn btn-success">💾 Save</button>
-        <button type="button" class="btn btn-danger" (click)="onCancel()">❌ Cancel</button>
+        <!-- Balance Field -->
+        <div class="mb-3">
+          <label for="balance">Balance:</label>
+          <input type="number" class="form-control" formControlName="Balance" id="balance">
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="form-buttons">
+          <button type="submit" class="btn btn-success">💾 Save</button>
+          <button type="button" class="btn btn-danger" (click)="closePopup()">❌ Cancel</button>
+        </div>
       </form>
     </div>
   </div>
