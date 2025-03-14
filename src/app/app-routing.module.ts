@@ -32,6 +32,10 @@ const routes: Routes = [
         path: 'generate-transaction',
         loadComponent: () => import('./demo/pages/other/generate-transaction/generate-transaction.component')
       },
+      {
+        path: 'user-detail/:ethAddress',
+        loadComponent: () => import('./demo/pages/user/user-details/user-details.component').then(m => m.UserDetailComponent)
+      },
     ]
   },
   {

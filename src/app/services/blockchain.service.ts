@@ -41,7 +41,6 @@ export class BlockchainService {
 
   // Function to add a user to the blockchain
   async addUser(userId: number, userName: string, email: string, ethereumAddress: string, contactNumber: string): Promise<string> {
-    debugger;
     if (!this.abi) {
       this.abi = await this.fetchABI();
     }
@@ -67,7 +66,6 @@ export class BlockchainService {
   // Wrapper to call addUser and handle additional logic if needed
   async sendTransaction(userId: number, userName: string, email: string, ethereumAddress: string, contactNumber: string): Promise<string> {
       try {
-        debugger;
         const addUserTxHash = await this.addUser(userId, userName, email, ethereumAddress, contactNumber);
         return addUserTxHash;
       } catch (error) {
@@ -75,4 +73,26 @@ export class BlockchainService {
         throw error;
       }
     }
+
+    // Function to fetch user details from the blockchain
+async fetchUser(ethereumAddress: string): Promise<any> {
+  try {
+    if (!this.abi || this.abi.length === 0) {
+      this.abi = await this.fetchABI();
+    }
+
+    const contract = new ethers.Contract(this.contractAddress, this.abi, this.provider);
+    const contractWithSigner = contract.connect(this.wallet) as ethers.Contract & { fetchUser: Function };
+    const userData = await contractWithSigner.fetchUser(ethereumAddress);
+
+    return {
+      userData
+    };
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw error;
+  }
+}
+
+    
 }

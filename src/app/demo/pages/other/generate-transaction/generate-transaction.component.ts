@@ -38,12 +38,5 @@ export default class GenerateTransactionComponent {
   constructor(private blockchainService: BlockchainService) {}
 
   async onAddUser () {
-    debugger;
-    // try {
-    //   const txHash = await this.blockchainService.addUser (this.privateKey, this.userData);
-    //   console.log('Transaction Hash:', txHash);
-    // } catch (error) {
-    //   console.error('Error adding user:', error);
-    // }
   }
 }

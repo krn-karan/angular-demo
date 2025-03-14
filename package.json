@@ -26,6 +26,7 @@
     "@angular/router": "19.0.5",
     "apexcharts": "3.49.0",
     "axios": "^1.8.2",
+    "bootstrap": "^5.3.3",
     "buffer": "^6.0.3",
     "ethers": "^6.13.5",
     "ngx-scrollbar": "16.1.1",

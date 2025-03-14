@@ -31,7 +31,6 @@ export default class LoginComponent {
   }  
   
   login() {  
-    debugger;
     if (!this.email.value ) {  
       this.email.markAsTouched();
       return;

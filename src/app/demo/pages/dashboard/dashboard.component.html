@@ -1,7 +1,7 @@
 <mat-card appearance="outlined">
   <mat-card-header class="header">
-    <mat-card-title class="medium-font bold">Users List</mat-card-title>
-    <button mat-stroked-button class="header-button" (click)="openPopup()">Add Ethereum User</button>
+    <mat-card-title class="medium-font bold">Transaction List</mat-card-title>
+    <button mat-stroked-button class="header-button" (click)="openPopup()">Add Transaction</button>
   </mat-card-header>
   <mat-card-actions>
     <mat-divider></mat-divider>
@@ -28,8 +28,13 @@
       <!-- Ethereum Address Column -->
       <ng-container matColumnDef="ethAddress">
         <th mat-header-cell *matHeaderCellDef> ethAddress </th>
-        <td mat-cell *matCellDef="let user"> {{user.ethAddress}} </td>
+        <td mat-cell *matCellDef="let user">
+          <button mat-button color="primary" (click)="viewUserDetail(user.ethAddress)">
+            {{ user.ethAddress }}
+          </button>
+        </td>
       </ng-container>
+      
 
       <!-- Balance Column -->
       <ng-container matColumnDef="balance">
@@ -42,6 +47,8 @@
         <th mat-header-cell *matHeaderCellDef> Hash </th>
         <td mat-cell *matCellDef="let user"> {{user.hash}} </td>
       </ng-container>
+
+    
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

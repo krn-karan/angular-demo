@@ -172,4 +172,9 @@ export default class DashboardComponent implements OnInit {
  closePopup() {
   this.isPopupOpen = false;
 }
+
+viewUserDetail(ethAddress: string) {
+  this.router.navigate(['/user-detail', ethAddress]);
+}
+
 }
