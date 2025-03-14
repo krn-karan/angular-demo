@@ -78,11 +78,6 @@ export default class RegisterComponent {
   }
 
   register() {
-    console.log(this.firstName.value);
-    console.log(this.lastName.value);
-    console.log(this.email.value);
-    console.log(this.password.value);
-    console.log(this.confirmPassword.value);
 
     // Mark all controls as touched to trigger validation messages  
     this.firstName.markAsTouched();
@@ -93,7 +88,6 @@ export default class RegisterComponent {
 
     if (this.firstName.valid && this.lastName.valid && this.email.valid && this.password.valid && this.confirmPassword.valid) {
       if (this.password.value !== this.confirmPassword.value) {
-        console.log("error password and confirm password does not matches");
         return;
       }
       const user : User= {
@@ -103,7 +97,6 @@ export default class RegisterComponent {
         password: this.password.value 
       }
       this.authService.register(user).subscribe(response => {
-        console.log('Registration Successful', response);
         alert('User Registered Successfully!');
       },
         error => {
@@ -112,7 +105,6 @@ export default class RegisterComponent {
         }
       );
     } else {
-      console.log("error !! Please enter proper values");
 
     }
   }

@@ -149,14 +149,12 @@ export default class DashboardComponent implements OnInit {
         '9408513093' // Add the contact number here
       );
   
-      console.log("✅ Transaction Hash:", txHash);
       hardcodedUser.Hash = txHash;
   
       this.authService.EthereumUsers(hardcodedUser).subscribe({
         next: () => {
           this.loadUsers();
           this.closePopup();
-          console.log("✅ User saved to backend");
         },
         error: (error) => {
           console.error("❌ API Error:", error);

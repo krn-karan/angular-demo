@@ -23,7 +23,6 @@ export class BlockchainService {
     // Initialize signer with private key
     this.wallet = new ethers.Wallet(privateKey, this.provider);
 
-    console.log('Signer Address:', this.wallet.address);
 
     // Fetch contract ABI
     this.fetchABI().then(abi => this.abi = abi);
@@ -33,7 +32,6 @@ export class BlockchainService {
   async fetchABI(): Promise<any> {
     try {
       const response = await this.http.get('/assets/abi.json').toPromise();
-      console.log('ABI fetched successfully:', response);
       return response;
     } catch (error) {
       console.error('Error fetching ABI:', error);
@@ -43,6 +41,7 @@ export class BlockchainService {
 
   // Function to add a user to the blockchain
   async addUser(userId: number, userName: string, email: string, ethereumAddress: string, contactNumber: string): Promise<string> {
+    debugger;
     if (!this.abi) {
       this.abi = await this.fetchABI();
     }
@@ -57,7 +56,6 @@ export class BlockchainService {
   
       // Wait for the transaction to be mined
       const receipt = await transactionResponse.wait();
-      console.log('Transaction successful:', receipt);
       return `${receipt.hash}`;
     } catch (error) {
       console.error('Transaction failed:', error);
@@ -69,8 +67,8 @@ export class BlockchainService {
   // Wrapper to call addUser and handle additional logic if needed
   async sendTransaction(userId: number, userName: string, email: string, ethereumAddress: string, contactNumber: string): Promise<string> {
       try {
+        debugger;
         const addUserTxHash = await this.addUser(userId, userName, email, ethereumAddress, contactNumber);
-        console.log('User added with transaction hash:', addUserTxHash);
         return addUserTxHash;
       } catch (error) {
         console.error('sendTransaction error:', error);
