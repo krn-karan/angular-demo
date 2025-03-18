@@ -57,55 +57,58 @@
 </mat-card>
 
 <div class="container">
-  <!-- Popup -->
-  <div *ngIf="isPopupOpen" class="popup col-4">
-    <div class="popup-content">
-      <!-- Transaction Header (added) -->
-      <div class="transaction-header">
-        <p>🔄 Transaction</p>
+  <!-- Popup Overlay -->
+  <div *ngIf="isPopupOpen" class="popup-overlay">
+    <div class="popup">
+      
+      <!-- Header -->
+      <div class="popup-header">
+        <h3>🔄 Transaction</h3>
       </div>
 
-      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-        
-        <!-- Select Users Field -->
-        <div class="mb-3">
-          <label for="userSelect">Select Users</label>
-          <select class="form-control" formControlName="Id" id="userSelect">
-            <option value="" disabled selected>Select Users</option>
-            <option *ngFor="let ulist of this.selectUserList" [value]="ulist.value">{{ ulist.name }}</option>
-          </select>
-        </div>
+      <!-- Body -->
+      <div class="popup-body">
+        <form [formGroup]="userForm">
 
-        <!-- Name Field -->
-        <div class="mb-3">
-          <label for="name">Name:</label>
-          <input type="text" class="form-control" formControlName="Name" id="name">
-        </div>
+          <!-- Select Users -->
+          <div class="form-group">
+            <select class="form-control" formControlName="Id">
+              <option value="" disabled selected>Select Users</option>
+              <option *ngFor="let ulist of selectUserList" [value]="ulist.value">{{ ulist.name }}</option>
+            </select>
+          </div>
 
-        <!-- Email Field -->
-        <div class="mb-3">
-          <label for="email">Email:</label>
-          <input type="email" class="form-control" formControlName="Email" id="email">
-        </div>
+          <!-- Name -->
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="Name" placeholder="Name">
+          </div>
 
-        <!-- Ethereum Address Field -->
-        <div class="mb-3">
-          <label for="ethAddress">EthAddress:</label>
-          <input type="text" class="form-control" formControlName="EthAddress" id="ethAddress">
-        </div>
+          <!-- Email -->
+          <div class="form-group">
+            <input type="email" class="form-control" formControlName="Email" placeholder="Email">
+          </div>
 
-        <!-- Balance Field -->
-        <div class="mb-3">
-          <label for="balance">Balance:</label>
-          <input type="number" class="form-control" formControlName="Balance" id="balance">
-        </div>
+          <!-- Ethereum Address -->
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="EthAddress" placeholder="Ethereum Address">
+          </div>
 
-        <!-- Footer Buttons -->
-        <div class="form-buttons">
-          <button type="submit" class="btn btn-success">💾 Save</button>
-          <button type="button" class="btn btn-danger" (click)="closePopup()">❌ Cancel</button>
-        </div>
-      </form>
+          <!-- Balance -->
+          <div class="form-group">
+            <input type="number" class="form-control" formControlName="Balance" placeholder="Balance">
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="popup-footer">
+        <button type="submit" class="btn btn-success" style="margin-right: 20px;" (click)="onSubmit()">💾 Save</button>
+        <button type="button" class="btn btn-danger" (click)="closePopup()">❌ Cancel</button>
+      </div>
+
     </div>
   </div>
 </div>
+
+

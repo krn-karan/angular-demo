@@ -1,12 +1,13 @@
 // angular import
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 // project import
 import { SharedModule } from 'src/app/demo/shared/shared.module';
 
 @Component({
   selector: 'app-nav-right',
-  imports: [SharedModule],
+  imports: [SharedModule, RouterModule],
   templateUrl: './toolbar-right.component.html',
   styleUrls: ['./toolbar-right.component.scss']
 })
