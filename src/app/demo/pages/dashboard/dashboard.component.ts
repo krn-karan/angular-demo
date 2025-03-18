@@ -91,6 +91,7 @@ export default class DashboardComponent implements OnInit {
 
   loadUserDropdownList() {
     this.authService.GetLoginUsers().subscribe({
+      
       next: (data) => {
         this.createdUsersForList = data;
         this.selectUserList = this.createdUsersForList.map(user => ({
@@ -124,11 +125,6 @@ export default class DashboardComponent implements OnInit {
   async onSubmit() {
     const hardcodedUser: EthereumUsers = {
       id: this.userForm.controls['Id'].value,
-      //Id: 1234,
-      // Name: "Karan yt" as string,
-      // Email: "mansibgami23@gmail.com",
-      // EthAddress: "0x0149EA6f5dFf73289F7D5dd79600a32A986a67d6",
-      // Balance: 0,
       Name: this.userForm.controls['Name'].value,
       Email: this.userForm.controls['Email'].value,
       EthAddress: this.userForm.controls['EthAddress'].value,
