@@ -41,6 +41,7 @@ export class BlockchainService {
 
   // Function to add a user to the blockchain
   async addUser(userId: number, userName: string, email: string, ethereumAddress: string, contactNumber: string): Promise<string> {
+    debugger;
     if (!this.abi) {
       this.abi = await this.fetchABI();
     }
@@ -65,7 +66,8 @@ export class BlockchainService {
 
   // Wrapper to call addUser and handle additional logic if needed
   async sendTransaction(userId: number, userName: string, email: string, ethereumAddress: string, contactNumber: string): Promise<string> {
-      try {
+    debugger;  
+    try {
         const addUserTxHash = await this.addUser(userId, userName, email, ethereumAddress, contactNumber);
         return addUserTxHash;
       } catch (error) {

@@ -94,17 +94,20 @@
           </div>
 
           <!-- Balance -->
-          <div class="form-group">
+          <!-- <div class="form-group">
             <input type="number" class="form-control" formControlName="Balance" placeholder="Balance">
-          </div>
+          </div> -->
 
         </form>
       </div>
 
       <!-- Footer -->
       <div class="popup-footer">
-        <button type="submit" class="btn btn-success" style="margin-right: 20px;" (click)="onSubmit()">💾 Save</button>
-        <button type="button" class="btn btn-danger" (click)="closePopup()">❌ Cancel</button>
+        <button type="submit" class="btn btn-success" style="margin-right: 20px;" (click)="onSubmit()" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span *ngIf="!isLoading">💾 Save</span>
+        </button>
+        <button type="button" class="btn btn-danger" (click)="closePopup()" [disabled]="isLoading">❌ Cancel</button>
       </div>
 
     </div>
