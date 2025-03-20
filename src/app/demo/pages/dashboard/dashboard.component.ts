@@ -22,6 +22,7 @@ export type EthereumUsers = {
   IsActive: boolean | null;
   IsDeleted: boolean;
   CreatedAt: Date;
+  Phoneno: string | null;
   UpdatedAt: Date;
 };
 
@@ -81,6 +82,7 @@ export default class DashboardComponent implements OnInit {
       Name: ['', Validators.required],
       Email: ['', [Validators.required, Validators.email]],
       EthAddress: ['', Validators.required],
+      Phoneno: ['', Validators.required],
       Hash: ['']
     });
   }
@@ -141,7 +143,8 @@ export default class DashboardComponent implements OnInit {
       Hash: '',
       IsDeleted: false,
       CreatedAt: new Date(),
-      UpdatedAt: new Date()
+      UpdatedAt: new Date(),
+      Phoneno: this.userForm.controls['Phoneno'].value
     };
 
     try {
@@ -150,7 +153,7 @@ export default class DashboardComponent implements OnInit {
         hardcodedUser.Name!,
         hardcodedUser.Email!,
         hardcodedUser.EthAddress!,
-        '9408513093' // Add the contact number here
+        hardcodedUser.Phoneno!, // Add the contact number here
       );
 
       hardcodedUser.Hash = txHash;
