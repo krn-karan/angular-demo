@@ -8,7 +8,7 @@ import { EthereumUsers } from '../demo/pages/dashboard/dashboard.component';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:7277/api/Users'; 
+  private apiUrl = 'http://66.55.65.165/api/users'; 
 
   constructor(private http: HttpClient) {}
 
@@ -30,7 +30,6 @@ export class AuthService {
     return this.http.get(url);
   }
   EthereumUsers(ethereumuser: EthereumUsers): Observable<any> {
-    debugger;
     const url = `${this.apiUrl}/PostEthereumUsers`;
     return this.http.post(url, ethereumuser);
   }

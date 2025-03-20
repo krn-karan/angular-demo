@@ -41,8 +41,8 @@ export type EthereumUsersForList = {
 
 export type CreatedUsersForList = {
   id: number;
-  firstName: string | null;
-  lastName: string | null;
+  firstname: string | null;
+  lastname: string | null;
   email: string | null;
   password: number | null;
 };
@@ -96,9 +96,10 @@ export default class DashboardComponent implements OnInit {
     this.authService.GetLoginUsers().subscribe({
 
       next: (data) => {
+        
         this.createdUsersForList = data;
         this.selectUserList = this.createdUsersForList.map(user => ({
-          name: (user.firstName || 'Unknown') + ' ' + (user.lastName || 'Unknown'),
+          name: (user.firstname || 'Unknown') + ' ' + (user.lastname || 'Unknown'),
           value: user.id || 0
         }));
       },
@@ -111,6 +112,7 @@ export default class DashboardComponent implements OnInit {
   loadUsers() {
     this.authService.GetEthereumUsers().subscribe({
       next: (data) => {
+        
         this.usersList = data;
         this.dataSource.data = this.usersList;
       },
